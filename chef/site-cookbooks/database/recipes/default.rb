@@ -9,39 +9,6 @@
 
 databases = %w(activerecord_unittest activerecord_unittest2)
 
-# mysql
-
-mysql_connection_info = {
-  :host     => "localhost",
-  :username => 'root',
-  :password => node['mysql']['server_root_password']
-}
-
-databases.each do |database|
-  mysql_database database do
-    connection mysql_connection_info
-    encoding "utf8"
-    action :create
-  end
-end
-
-mysql_database_user 'rails' do
-  connection mysql_connection_info
-  password ''
-  action :create
-end
-
-databases.each do |database|
-  mysql_database_user 'rails' do
-    connection mysql_connection_info
-    password ''
-    database_name database
-    host 'localhost'
-    privileges [:all]
-    action :grant
-  end
-end
-
 # postgresql
 
 template "#{node[:postgresql][:dir]}/pg_hba.conf" do

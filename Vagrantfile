@@ -2,12 +2,11 @@
 # vi: set ft=ruby :
 
 Vagrant::Config.run do |config|
-  config.vm.box       = 'precise32'
-  config.vm.box_url   = 'http://files.vagrantup.com/precise32.box'
-  config.vm.host_name = 'chef-rails-dev-box'
+  config.vm.box       = 'precise64'
+  config.vm.box_url   = 'http://files.vagrantup.com/precise64.box'
+  config.vm.host_name = 'precise64'
 
-  config.vm.network :hostonly, "192.168.30.00"
-  config.vm.share_folder("vagrant-root", "/vagrant", ".", "nfs" => true)
+  config.vm.network :forwarded_port, guest: 3000, host: 3000
 
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = ["chef/cookbooks", "chef/site-cookbooks"]
@@ -16,21 +15,16 @@ Vagrant::Config.run do |config|
 
     chef.add_role "rails-development"
     chef.json = {
-        :mysql => {
-          :server_root_password   => '',
-          :server_debian_password => '',
-          :server_repl_password   => ''
-        },
         "postgresql" => {
           "password" => {
             "postgres" => ""
           }
         },
         "rbenv" => {
-          "global"  => "2.0.0-p0",
-          "rubies" => [ "2.0.0-p0" ],
+          "global"  => "2.0.0-p247",
+          "rubies" => [ "2.0.0-p247" ],
           "gems" => {
-            "2.0.0-p0" => [
+            "2.0.0-p247" => [
               { 'name' => 'bundler' }
             ]
           }
